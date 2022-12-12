@@ -31,22 +31,22 @@ namespace WindowLifetimeService
         }
         public event Action<WindowLifetimeContext> OnDispose;
 
-        protected void CreateWindow(WindowLifetimeContext window, bool setOwner = false)
+        protected void CreateWindow(WindowLifetimeContext context, bool setOwner = false)
         {
             //Owner работает странно - он сам сворачивает/закрывает своих детей и группирует в одну иконку когда свернуты, 
             //но не дает быть поверх детей и скрывает овнера, если чайлд был закрыт при наличии чайлдов у него (баг?)
             if(setOwner)
             {
-                window._window.Owner = _window;
-                window._window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                context._window.Owner = _window;
+                context._window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
             else
             {
-                _childsOwner._childs.Add(window);
-                window._window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                _childsOwner._childs.Add(context);
+                context.OnDispose += OnChildDisposed;
+                context._window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             }
-            window.OnDispose += OnChildDisposed;
-            window._window.Show();
+            context._window.Show();
         }
 
         private void OnChildDisposed(WindowLifetimeContext child)

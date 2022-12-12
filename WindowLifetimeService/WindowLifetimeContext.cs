@@ -37,7 +37,7 @@ namespace WindowLifetimeService
             //но не дает быть поверх детей и скрывает овнера, если чайлд был закрыт при наличии чайлдов у него (баг?)
             if(setOwner)
             {
-                context._window.Owner = _window;
+                context._window.Owner = _childsOwner._window;
                 context._window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
             else
